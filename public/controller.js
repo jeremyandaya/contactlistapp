@@ -7,11 +7,25 @@ myApp.controller('AppCtrl',['$scope', '$http',
 	function($scope, $http) {
 		console.log("Hello there from controller.js!");
 
-		// $http.get('/contactList')
-		$http.get('/contactList').success(function(response) {
-			console.log("I got the data I requested!!!");
-			$scope.contactList = response;
-		});
+		var refreshPage = function() {
+			// $http.get('/contactList')
+			$http.get('/contactList').success(function(response) {
+				console.log("I got the data I requested!!!");
+				$scope.contactList = response;
+				$scope.contact = "";
+			});
+		};
+
+		refreshPage();
+
+		$scope.addContact = function() {
+			console.log($scope.contact);
+			// sends input data to server.js
+			$http.post('/contactList', $scope.contact).success(function(response) {
+				console.log(response);
+				refreshPage();
+			}); 
+		};
 
 		// person1 = {
 		// 	name: 'Hulk',
