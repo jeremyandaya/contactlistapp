@@ -14,27 +14,6 @@ app.use(bodyParser.json());
 app.get('/contactList', function(req, res) {
 	console.log("I received a GET request!");
 
-	// person1 = {
-	// 	name: 'Hulk',
-	// 	email: 'hulk@avengers.com',
-	// 	number: '(111) 111-1111'
-	// };
-
-	// person2 = {
-	// 	name: 'Tony',
-	// 	email: 'tony@avengers.com',
-	// 	number: '(222) 222-2222'
-	// };
-
-	// person3 = {
-	// 	name: 'Thor',
-	// 	email: 'thor@avengers.com',
-	// 	number: '(333) 333-3333'
-	// };
-
-	// var contactList = [person1, person2, person3];
-	// res.json(contactList);
-
 	db.contactList.find(function(err, docs) {
 		console.log(docs); //  test to see if we receive data from db
 		res.json(docs); // sends data back to the controller
@@ -46,6 +25,32 @@ app.post('/contactList', function(req, res) {
 	db.contactList.insert(req.body, function(err, doc) {
 		res.json(doc);
 	});
+});
+
+app.delete('/contactList/:id', function (req, res) {
+	var id = req.params.id;
+	console.log(id);
+	db.contactList.remove({_id: mongojs.ObjectId(id)}, function (err, doc) {
+		res.json(doc);
+	});
+});
+
+app.get('/contactList/:id', function (req, res) {
+	var id = req.params.id;
+	console.log(id);
+	db.contactList.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
+		res.json(doc);
+	});
+});
+
+app.put('/contactList/:id', function (req, res) {
+	var id = req.params.id;
+	console.log(req.body.name);
+	db.contactList.findAndModify({query: {_id: mongojs.ObjectId(id)},
+		update: {$set: {name: req.body.name, email: req.body.email, number: req.body.number}},
+		new: true}, function (err, doc) {
+			res.json(doc);
+		});
 });
 
 app.listen(3000);

@@ -27,25 +27,29 @@ myApp.controller('AppCtrl',['$scope', '$http',
 			}); 
 		};
 
-		// person1 = {
-		// 	name: 'Hulk',
-		// 	email: 'hulk@avengers.com',
-		// 	number: '(111) 111-1111'
-		// };
+		$scope.remove = function(id) {
+			console.log(id);
+			$http.delete('/contactList/' + id).success(function(response) {
+				refreshPage();
+			});
+		};
 
-		// person2 = {
-		// 	name: 'Tony',
-		// 	email: 'tony@avengers.com',
-		// 	number: '(222) 222-2222'
-		// };
+		$scope.edit = function(id) {
+			console.log(id);
+			$http.get('/contactList/' + id).success(function(response) {
+				$scope.contact = response;
+			})
+		};
 
-		// person3 = {
-		// 	name: 'Thor',
-		// 	email: 'thor@avengers.com',
-		// 	number: '(333) 333-3333'
-		// };
+		$scope.update = function() {
+			console.log($scope.contact._id);
+			$http.put('/contactList/' + $scope.contact._id, $scope.contact).success(function(response) {
+				refreshPage();
+			})
+		};
 
-		// var contactList = [person1, person2, person3];
-		// $scope.contactList = contactList;
+		$scope.deselect = function() {
+			$scope.contact = "";
+		}
 
 	}]);
